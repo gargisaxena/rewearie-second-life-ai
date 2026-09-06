@@ -158,7 +158,7 @@ function Home() {
         <ol className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {STEPS.map((step) => (
             <li key={step.number} className="card-soft p-7 transition-all duration-500 hover:-translate-y-1 hover:shadow-lift">
-              <span className="font-serif text-4xl text-petal">{step.number}</span>
+              <span className="font-serif text-4xl text-rose-deep">{step.number}</span>
               <h3 className="mt-5 text-xl">{step.title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{step.description}</p>
             </li>
