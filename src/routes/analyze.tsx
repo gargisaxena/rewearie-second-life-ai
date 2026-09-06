@@ -87,8 +87,8 @@ function Analyze() {
   const navigate = useNavigate();
   const fileRef = useRef<HTMLInputElement>(null);
   const [photo, setPhoto] = useState<string | null>(null);
-  const [conditionLabel, setConditionLabel] = useState(UI_CONDITIONS[0]!.label);
-  const [reasonLabel, setReasonLabel] = useState(UI_REASONS[0]!.label);
+  const [conditionLabel, setConditionLabel] = useState<string>(UI_CONDITIONS[0]!.label);
+  const [reasonLabel, setReasonLabel] = useState<string>(UI_REASONS[0]!.label);
   const [openTo, setOpenTo] = useState<Outcome[]>([]);
   const [working, setWorking] = useState(false);
 
