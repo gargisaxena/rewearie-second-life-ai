@@ -85,7 +85,10 @@ function HeroVisual() {
       {/* Rose ribbon */}
       <div
         className="absolute left-[14%] bottom-[16%] h-9 w-[48%] rotate-[-2deg] rounded-full blur-[1px]"
-        style={{ background: "linear-gradient(90deg, var(--rose)/20, var(--petal)/40, var(--rose)/20)" }}
+        style={{
+          background:
+            "linear-gradient(90deg, color-mix(in oklab, var(--rose) 20%, transparent), color-mix(in oklab, var(--petal) 40%, transparent), color-mix(in oklab, var(--rose) 20%, transparent))",
+        }}
       />
 
       {/* Dot details */}
