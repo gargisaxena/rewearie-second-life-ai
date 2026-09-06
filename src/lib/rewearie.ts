@@ -100,6 +100,7 @@ export type Piece = {
   createdAt: number;
   co2: number;
   water: number;
+  openTo?: Outcome[];
 };
 
 export const CATEGORIES = [
@@ -128,10 +129,37 @@ export const REASONS = [
   "Fell out of love with it",
 ];
 
+export const UI_CONDITIONS = [
+  { label: "almost new", mapsTo: "Like new" },
+  { label: "good", mapsTo: "Gently worn" },
+  { label: "slightly worn", mapsTo: "Visibly worn" },
+  { label: "damaged", mapsTo: "Small damage" },
+  { label: "heavily damaged", mapsTo: "Beyond wearing" },
+] as const;
+
+export const UI_REASONS = [
+  { label: "doesn't fit", mapsTo: "Doesn't fit anymore" },
+  { label: "damaged", mapsTo: "Needs a small repair" },
+  { label: "not my style anymore", mapsTo: "Fell out of love with it" },
+  { label: "rarely wear it", mapsTo: "Bored of the styling" },
+  { label: "feels outdated", mapsTo: "Bored of the styling" },
+  { label: "other", mapsTo: "Fell out of love with it" },
+] as const;
+
+export const OPEN_TO_OPTIONS: { label: string; outcome: Outcome }[] = [
+  { label: "rewearing", outcome: "rewear" },
+  { label: "repairing", outcome: "repair" },
+  { label: "changing the design", outcome: "upcycle" },
+  { label: "reselling", outcome: "resell" },
+  { label: "donating", outcome: "donate" },
+  { label: "recycling", outcome: "recycle" },
+];
+
 export function analyse(input: {
   category: string;
   condition: string;
   reason: string;
+  openTo?: Outcome[];
 }): { outcome: Outcome; confidence: number; scores: { outcome: Outcome; score: number }[] } {
   const s: Record<Outcome, number> = {
     rewear: 12,
@@ -200,6 +228,12 @@ export function analyse(input: {
   if (input.category === "Knitwear") s.repair += 8;
   if (input.category === "Outerwear" || input.category === "Dress") s.resell += 10;
   if (input.category === "Shoes / accessory") s.recycle += 6;
+
+  if (input.openTo) {
+    for (const o of input.openTo) {
+      s[o] += 18;
+    }
+  }
 
   const scores = OUTCOME_ORDER.map((o) => ({ outcome: o, score: Math.max(s[o], 0) })).sort(
     (a, b) => b.score - a.score,
