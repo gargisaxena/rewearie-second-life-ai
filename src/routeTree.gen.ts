@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AnalyzeRouteImport } from './routes/analyze'
+import { Route as ImpactRouteImport } from './routes/impact'
+import { Route as PiecesRouteImport } from './routes/pieces'
 import { Route as ResultsRouteImport } from './routes/results'
 
 const IndexRoute = IndexRouteImport.update({
@@ -23,6 +25,16 @@ const AnalyzeRoute = AnalyzeRouteImport.update({
   path: '/analyze',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ImpactRoute = ImpactRouteImport.update({
+  id: '/impact',
+  path: '/impact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PiecesRoute = PiecesRouteImport.update({
+  id: '/pieces',
+  path: '/pieces',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResultsRoute = ResultsRouteImport.update({
   id: '/results',
   path: '/results',
@@ -32,30 +44,38 @@ const ResultsRoute = ResultsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/analyze': typeof AnalyzeRoute
+  '/impact': typeof ImpactRoute
+  '/pieces': typeof PiecesRoute
   '/results': typeof ResultsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/analyze': typeof AnalyzeRoute
+  '/impact': typeof ImpactRoute
+  '/pieces': typeof PiecesRoute
   '/results': typeof ResultsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/analyze': typeof AnalyzeRoute
+  '/impact': typeof ImpactRoute
+  '/pieces': typeof PiecesRoute
   '/results': typeof ResultsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/analyze' | '/results'
+  fullPaths: '/' | '/analyze' | '/impact' | '/pieces' | '/results'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/analyze' | '/results'
-  id: '__root__' | '/' | '/analyze' | '/results'
+  to: '/' | '/analyze' | '/impact' | '/pieces' | '/results'
+  id: '__root__' | '/' | '/analyze' | '/impact' | '/pieces' | '/results'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnalyzeRoute: typeof AnalyzeRoute
+  ImpactRoute: typeof ImpactRoute
+  PiecesRoute: typeof PiecesRoute
   ResultsRoute: typeof ResultsRoute
 }
 
@@ -75,6 +95,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AnalyzeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/impact': {
+      id: '/impact'
+      path: '/impact'
+      fullPath: '/impact'
+      preLoaderRoute: typeof ImpactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pieces': {
+      id: '/pieces'
+      path: '/pieces'
+      fullPath: '/pieces'
+      preLoaderRoute: typeof PiecesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/results': {
       id: '/results'
       path: '/results'
@@ -88,6 +122,8 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnalyzeRoute: AnalyzeRoute,
+  ImpactRoute: ImpactRoute,
+  PiecesRoute: PiecesRoute,
   ResultsRoute: ResultsRoute,
 }
 export const routeTree = rootRouteImport
