@@ -155,93 +155,140 @@ export const OPEN_TO_OPTIONS: { label: string; outcome: Outcome }[] = [
   { label: "recycling", outcome: "recycle" },
 ];
 
-export function analyse(input: {
+/**
+ * Reusable recommendation algorithm.
+ *
+ * Deterministic weighted scoring: every outcome starts from a base weight
+ * derived from the garment's condition (see CONDITION_BASE below), then the
+ * user's reason and openness preferences adjust the totals. All scores are
+ * clamped to 0–100 and sorted; the highest becomes the BEST MATCH.
+ */
+
+export type AnalyseInput = {
   category: string;
   condition: string;
   reason: string;
   openTo?: Outcome[];
-}): { outcome: Outcome; confidence: number; scores: { outcome: Outcome; score: number }[] } {
-  const s: Record<Outcome, number> = {
-    rewear: 12,
+};
+
+export type AnalyseResult = {
+  outcome: Outcome;
+  confidence: number;
+  scores: { outcome: Outcome; score: number }[];
+};
+
+const clamp = (n: number) => Math.min(100, Math.max(0, Math.round(n)));
+
+// Base weights per condition — the core of the algorithm.
+const CONDITION_BASE: Record<string, Record<Outcome, number>> = {
+  // ALMOST NEW: high rewear, high resell, high donate, very low recycle
+  "Like new": {
+    rewear: 85,
     repair: 10,
-    upcycle: 10,
-    resell: 10,
-    donate: 10,
-    recycle: 4,
-  };
+    upcycle: 20,
+    resell: 88,
+    donate: 78,
+    recycle: 5,
+  },
+  // GOOD: high rewear, high donate, medium-high resell, medium upcycle
+  "Gently worn": {
+    rewear: 85,
+    repair: 20,
+    upcycle: 50,
+    resell: 68,
+    donate: 80,
+    recycle: 8,
+  },
+  // SLIGHTLY WORN: high repair, high upcycle, medium rewear, medium donate, low resell
+  "Visibly worn": {
+    rewear: 55,
+    repair: 80,
+    upcycle: 82,
+    resell: 25,
+    donate: 52,
+    recycle: 30,
+  },
+  // DAMAGED: high repair, very high upcycle, medium recycle, low resell
+  "Small damage": {
+    rewear: 30,
+    repair: 85,
+    upcycle: 92,
+    resell: 15,
+    donate: 25,
+    recycle: 50,
+  },
+  // HEAVILY DAMAGED: high recycle, high upcycle when material reusable, very low resell/donate
+  "Beyond wearing": {
+    rewear: 8,
+    repair: 25,
+    upcycle: 70,
+    resell: 4,
+    donate: 5,
+    recycle: 90,
+  },
+};
 
-  switch (input.condition) {
-    case "Like new":
-      s.resell += 40;
-      s.rewear += 26;
-      s.donate += 14;
-      break;
-    case "Gently worn":
-      s.rewear += 34;
-      s.resell += 22;
-      s.donate += 18;
-      break;
-    case "Small damage":
-      s.repair += 46;
-      s.upcycle += 20;
-      break;
-    case "Visibly worn":
-      s.upcycle += 38;
-      s.donate += 18;
-      s.recycle += 16;
-      break;
-    case "Beyond wearing":
-      s.recycle += 52;
-      s.upcycle += 18;
-      break;
+// Categories whose material typically survives heavy damage — keeps upcycle
+// viable even when the garment is beyond wearing.
+const REUSABLE_MATERIAL_CATEGORIES = new Set([
+  "Denim",
+  "Outerwear",
+  "Knitwear",
+  "Trousers / skirt",
+]);
+
+// Reason adjustments — applied on top of the condition base.
+const REASON_DELTA: Record<string, Partial<Record<Outcome, number>>> = {
+  "Doesn't fit anymore": { resell: +12, donate: +10, upcycle: +6, rewear: -18 },
+  "Bored of the styling": { rewear: +12, upcycle: +8 },
+  "Needs a small repair": { repair: +15 },
+  "Fabric is tired": { recycle: +10, upcycle: +8, resell: -12 },
+  "Fell out of love with it": { resell: +8, donate: +10 },
+};
+
+// Weight applied to each action the user says they are open to.
+const OPEN_TO_BOOST = 15;
+
+export function analyse(input: AnalyseInput): AnalyseResult {
+  const base =
+    CONDITION_BASE[input.condition] ?? CONDITION_BASE["Gently worn"]!;
+
+  const s: Record<Outcome, number> = { ...base };
+
+  // Heavily damaged pieces in reusable-material categories favour upcycling.
+  if (
+    input.condition === "Beyond wearing" &&
+    REUSABLE_MATERIAL_CATEGORIES.has(input.category)
+  ) {
+    s.upcycle += 12;
+    s.recycle -= 8;
   }
 
-  switch (input.reason) {
-    case "Doesn't fit anymore":
-      s.resell += 22;
-      s.donate += 16;
-      s.upcycle += 10;
-      s.rewear -= 12;
-      break;
-    case "Bored of the styling":
-      s.rewear += 24;
-      s.upcycle += 14;
-      break;
-    case "Needs a small repair":
-      s.repair += 34;
-      break;
-    case "Fabric is tired":
-      s.recycle += 20;
-      s.upcycle += 16;
-      s.resell -= 12;
-      break;
-    case "Fell out of love with it":
-      s.resell += 18;
-      s.donate += 16;
-      break;
-  }
-
-  if (input.category === "Denim") {
-    s.repair += 10;
-    s.upcycle += 8;
-  }
-  if (input.category === "Knitwear") s.repair += 8;
-  if (input.category === "Outerwear" || input.category === "Dress") s.resell += 10;
-  if (input.category === "Shoes / accessory") s.recycle += 6;
-
-  if (input.openTo) {
-    for (const o of input.openTo) {
-      s[o] += 18;
+  const deltas = REASON_DELTA[input.reason];
+  if (deltas) {
+    for (const [outcome, delta] of Object.entries(deltas) as [Outcome, number][]) {
+      s[outcome] += delta;
     }
   }
 
-  const scores = OUTCOME_ORDER.map((o) => ({ outcome: o, score: Math.max(s[o], 0) })).sort(
-    (a, b) => b.score - a.score,
-  );
-  const total = scores.reduce((sum, x) => sum + x.score, 0) || 1;
+  if (input.openTo) {
+    for (const o of input.openTo) {
+      s[o] += OPEN_TO_BOOST;
+    }
+  }
+
+  const scores = OUTCOME_ORDER.map((outcome) => ({
+    outcome,
+    score: clamp(s[outcome]),
+  })).sort((a, b) => b.score - a.score);
+
   const top = scores[0]!;
-  const confidence = Math.round((top.score / total) * 100);
-  return { outcome: top.outcome, confidence: Math.min(96, Math.max(46, confidence + 22)), scores };
+  const second = scores[1]!;
+  // Confidence reflects how clearly the best match leads the runner-up.
+  const lead = top.score - second.score;
+  const confidence = clamp(46 + lead * 1.4 + top.score * 0.35);
+
+  return { outcome: top.outcome, confidence, scores };
 }
 
 export function impactFor(category: string) {
