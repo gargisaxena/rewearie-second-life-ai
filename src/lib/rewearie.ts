@@ -205,8 +205,9 @@ export function analyse(input: {
     (a, b) => b.score - a.score,
   );
   const total = scores.reduce((sum, x) => sum + x.score, 0) || 1;
-  const confidence = Math.round((scores[0].score / total) * 100);
-  return { outcome: scores[0].outcome, confidence: Math.min(96, Math.max(46, confidence + 22)), scores };
+  const top = scores[0]!;
+  const confidence = Math.round((top.score / total) * 100);
+  return { outcome: top.outcome, confidence: Math.min(96, Math.max(46, confidence + 22)), scores };
 }
 
 export function impactFor(category: string) {

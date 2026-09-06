@@ -39,9 +39,9 @@ function Analyze() {
   const fileRef = useRef<HTMLInputElement>(null);
   const [photo, setPhoto] = useState<string | null>(null);
   const [name, setName] = useState("");
-  const [category, setCategory] = useState(CATEGORIES[0]);
-  const [condition, setCondition] = useState(CONDITIONS[1]);
-  const [reason, setReason] = useState(REASONS[0]);
+  const [category, setCategory] = useState(CATEGORIES[0]!);
+  const [condition, setCondition] = useState(CONDITIONS[1]!);
+  const [reason, setReason] = useState(REASONS[0]!);
   const [working, setWorking] = useState(false);
 
   function onFile(file: File | undefined) {

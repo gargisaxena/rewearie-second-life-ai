@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { OUTCOMES, loadPieces, type Piece } from "@/lib/rewearie";
 import { AnalyzeButton } from "@/components/site-chrome";
 
-type Search = { id?: string };
+type Search = { id?: string | undefined };
 
 export const Route = createFileRoute("/results")({
   validateSearch: (search: Record<string, unknown>): Search => ({
-    id: typeof search.id === "string" ? search.id : undefined,
+    id: typeof search['id'] === "string" ? (search['id'] as string) : undefined,
   }),
   head: () => ({
     meta: [
@@ -56,7 +56,7 @@ function Results() {
   }
 
   const outcome = OUTCOMES[piece.outcome];
-  const max = piece.scores[0].score || 1;
+  const max = piece.scores[0]!.score || 1;
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8 lg:py-20">
