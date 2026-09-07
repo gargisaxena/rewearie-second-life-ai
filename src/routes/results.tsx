@@ -176,7 +176,7 @@ function Results() {
                       className={`block h-full rounded-full transition-all duration-700 ${
                         s.outcome === piece.outcome ? "bg-rose-deep" : "bg-petal"
                       }`}
-                      style={{ width: `${Math.round((s.score / max) * 100)}%` }}
+                      style={{ width: `${s.score}%` }}
                     />
                   </span>
                   <span className="w-8 text-right text-xs text-muted-foreground">{s.score}</span>
