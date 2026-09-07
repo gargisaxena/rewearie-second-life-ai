@@ -304,6 +304,176 @@ export function impactFor(category: string) {
   return table[category] ?? { co2: 8, water: 2500 };
 }
 
+// ---------------------------------------------------------------------------
+// Results report: explanation + transformation ideas (deterministic)
+// ---------------------------------------------------------------------------
+
+/**
+ * A short editorial explanation of the best match, derived only from the
+ * outcome and the garment's condition — no randomness, no AI calls.
+ */
+export function explainResult(outcome: Outcome, condition: string): string {
+  const worn =
+    condition === "Visibly worn" || condition === "Small damage";
+  const beyond = condition === "Beyond wearing";
+
+  switch (outcome) {
+    case "rewear":
+      return "This piece is in beautiful shape — it simply needs a fresh styling idea to return to your everyday rotation.";
+    case "repair":
+      return worn
+        ? "A small, honest mend is all that stands between this piece and many more years of wear."
+        : "Its construction is still sound; one careful repair restores it completely.";
+    case "upcycle":
+      return beyond
+        ? "Although this piece is beyond wearing, its material still has strong potential for transformation."
+        : "Although this piece is worn, its material still has strong potential for transformation.";
+    case "resell":
+      return "In this condition it holds real value — someone is searching for exactly this piece right now.";
+    case "donate":
+      return "Wearable, useful, and ready to be loved again — it deserves a new home more than a listing fee.";
+    case "recycle":
+      return "Its wearing days are over, but the fibres themselves can still begin another life as new material.";
+  }
+}
+
+export type Idea = {
+  title: string;
+  difficulty: "easy" | "moderate" | "a weekend";
+  description: string;
+  potential: "low" | "medium" | "high";
+};
+
+/** Elegant transformation ideas per best-match outcome. */
+export const IDEAS: Record<Outcome, Idea[]> = {
+  rewear: [
+    {
+      title: "the front-row reset",
+      difficulty: "easy",
+      description: "Hang it at the very front of your wardrobe for two weeks and style it first, not last.",
+      potential: "high",
+    },
+    {
+      title: "one unlikely pairing",
+      difficulty: "easy",
+      description: "Wear it with the single piece in your closet you have never combined it with.",
+      potential: "medium",
+    },
+    {
+      title: "layer it differently",
+      difficulty: "moderate",
+      description: "Under a knit, over a dress, or belted — a new silhouette makes it feel newly bought.",
+      potential: "medium",
+    },
+  ],
+  repair: [
+    {
+      title: "a visible mend",
+      difficulty: "moderate",
+      description: "A contrasting sashiko-style stitch turns the repair into the most interesting detail.",
+      potential: "high",
+    },
+    {
+      title: "replace the closure",
+      difficulty: "easy",
+      description: "New buttons or a fresh zip make the whole piece feel considered again.",
+      potential: "medium",
+    },
+    {
+      title: "a tailor's hour",
+      difficulty: "easy",
+      description: "A professional fix for seams and hems usually costs less than replacing the piece.",
+      potential: "high",
+    },
+  ],
+  upcycle: [
+    {
+      title: "denim tote",
+      difficulty: "moderate",
+      description: "The strongest panels become a structured everyday bag — seams become features.",
+      potential: "high",
+    },
+    {
+      title: "cropped shorts",
+      difficulty: "easy",
+      description: "A clean cut above the knee and a frayed hem give tired denim a summer silhouette.",
+      potential: "high",
+    },
+    {
+      title: "patchwork detail",
+      difficulty: "moderate",
+      description: "Offcuts become visible patches or a contrast pocket on another piece you love.",
+      potential: "medium",
+    },
+    {
+      title: "small accessory",
+      difficulty: "a weekend",
+      description: "Scraps turn into a headband, scrunchie, or key fob — nothing goes to waste.",
+      potential: "medium",
+    },
+  ],
+  resell: [
+    {
+      title: "the daylight listing",
+      difficulty: "easy",
+      description: "Shoot on a plain wall in soft morning light — honest photos double your enquiries.",
+      potential: "high",
+    },
+    {
+      title: "the full story",
+      difficulty: "easy",
+      description: "List measurements, fabric, and flaws plainly; detailed listings sell faster and higher.",
+      potential: "high",
+    },
+    {
+      title: "bundle & price",
+      difficulty: "moderate",
+      description: "Pair it with one similar piece at 40–60% of retail to move both at once.",
+      potential: "medium",
+    },
+  ],
+  donate: [
+    {
+      title: "the ready-to-wear drop",
+      difficulty: "easy",
+      description: "Laundered, folded, and delivered to a local shelter — wearable the same day.",
+      potential: "high",
+    },
+    {
+      title: "the right charity",
+      difficulty: "easy",
+      description: "Match the category to a specialist charity so it is used, not resold in bulk.",
+      potential: "medium",
+    },
+    {
+      title: "a seasonal gift",
+      difficulty: "moderate",
+      description: "Hold warm pieces for autumn drives where they are needed most.",
+      potential: "medium",
+    },
+  ],
+  recycle: [
+    {
+      title: "take-back point",
+      difficulty: "easy",
+      description: "Most high-street retailers accept any textiles — the fibres become insulation or new yarn.",
+      potential: "high",
+    },
+    {
+      title: "household cloths",
+      difficulty: "easy",
+      description: "Soft cottons live one more life as cleaning and polishing cloths before recycling.",
+      potential: "medium",
+    },
+    {
+      title: "strip the hardware",
+      difficulty: "moderate",
+      description: "Remove zips and buttons first — clean fibre streams are recycled far more effectively.",
+      potential: "high",
+    },
+  ],
+};
+
 const KEY = "rewearie.pieces.v1";
 
 export function loadPieces(): Piece[] {
