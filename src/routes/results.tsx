@@ -68,7 +68,7 @@ function Results() {
   }
 
   const outcome = OUTCOMES[piece.outcome];
-  const max = piece.scores[0]!.score || 1;
+  
   const ideas = IDEAS[piece.outcome];
   const explanation = explainResult(piece.outcome, piece.condition);
 
