@@ -1,24 +1,29 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
-import { OUTCOMES, loadPieces, type Piece } from "@/lib/rewearie";
-import { AnalyzeButton } from "@/components/site-chrome";
+import {
+  IDEAS,
+  OUTCOMES,
+  explainResult,
+  loadPieces,
+  type Piece,
+} from "@/lib/rewearie";
 
 type Search = { id?: string | undefined };
 
 export const Route = createFileRoute("/results")({
   validateSearch: (search: Record<string, unknown>): Search => ({
-    id: typeof search['id'] === "string" ? (search['id'] as string) : undefined,
+    id: typeof search["id"] === "string" ? (search["id"] as string) : undefined,
   }),
   head: () => ({
     meta: [
-      { title: "Its next life — rewearie ♡" },
+      { title: "Your rewearie report — rewearie ♡" },
       {
         name: "description",
         content:
-          "Your piece's recommended next life, with the steps to take and the impact you keep out of landfill.",
+          "Your piece's recommended next life — its best match, full score report, and elegant ideas for what it could become.",
       },
-      { property: "og:title", content: "Its next life — rewearie ♡" },
+      { property: "og:title", content: "Your rewearie report — rewearie ♡" },
       {
         property: "og:description",
         content: "A considered recommendation for the piece you just analyzed.",
@@ -30,8 +35,10 @@ export const Route = createFileRoute("/results")({
 
 function Results() {
   const { id } = Route.useSearch();
+  const navigate = useNavigate();
   const [piece, setPiece] = useState<Piece | null>(null);
   const [ready, setReady] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     const all = loadPieces();
@@ -48,19 +55,39 @@ function Results() {
       <div className="mx-auto max-w-xl px-5 py-24 text-center sm:px-8">
         <h1 className="text-4xl">Nothing to show yet.</h1>
         <p className="mt-4 text-sm text-muted-foreground">
-          Analyze a piece and its recommendation will appear here.
+          Analyze a piece and its personal report will appear here.
         </p>
-        <AnalyzeButton className="mt-8" />
+        <Link
+          to="/analyze"
+          className="mt-8 inline-block rounded-lg bg-primary px-6 py-3 text-sm lowercase tracking-wide text-primary-foreground transition-colors hover:bg-rose-deep"
+        >
+          analyze a piece ♡
+        </Link>
       </div>
     );
   }
 
   const outcome = OUTCOMES[piece.outcome];
-  const max = piece.scores[0]!.score || 1;
+  
+  const ideas = IDEAS[piece.outcome];
+  const explanation = explainResult(piece.outcome, piece.condition);
+
+  // Circular score ring
+  const R = 52;
+  const CIRC = 2 * Math.PI * R;
+  const ringOffset = CIRC * (1 - piece.confidence / 100);
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8 lg:py-20">
-      <div className="rise-in grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
+      <header className="rise-in text-center">
+        <h1 className="text-4xl sm:text-5xl">your piece has potential ♡</h1>
+        <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted-foreground">
+          Here is its personal rewearie report — read it like a love letter to its next life.
+        </p>
+      </header>
+
+      <div className="rise-in mt-14 grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
+        {/* LEFT — the piece */}
         <div>
           {piece.photo ? (
             <img
@@ -75,82 +102,142 @@ function Results() {
           )}
         </div>
 
+        {/* RIGHT — the report */}
         <div>
-          <p className="text-eyebrow">recommendation</p>
-          <h1 className="mt-4 text-5xl sm:text-6xl">
-            <span className="italic text-rose-deep">{outcome.label}</span> this piece.
-          </h1>
-          <p className="mt-5 max-w-lg text-base leading-relaxed text-muted-foreground">
-            {outcome.blurb}
-          </p>
+          <p className="text-eyebrow">your rewearie report</p>
 
-          <div className="mt-8 flex flex-wrap gap-2 text-xs tracking-wide text-muted-foreground">
-            {[piece.name, piece.category, piece.condition, piece.reason].map((chip) => (
-              <span key={chip} className="rounded-lg bg-secondary px-3 py-1.5">
-                {chip}
-              </span>
-            ))}
+          <dl className="mt-6 grid grid-cols-2 gap-4">
+            <div className="rounded-xl border border-border bg-card px-5 py-4">
+              <dt className="text-eyebrow">item</dt>
+              <dd className="mt-2 font-serif text-xl">{piece.name}</dd>
+            </div>
+            <div className="rounded-xl border border-border bg-card px-5 py-4">
+              <dt className="text-eyebrow">condition</dt>
+              <dd className="mt-2 font-serif text-xl">{piece.condition}</dd>
+            </div>
+          </dl>
+
+          {/* Best match + circular score */}
+          <div className="card-soft mt-6 flex items-center gap-8 p-7">
+            <div className="relative h-32 w-32 shrink-0">
+              <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
+                <circle
+                  cx="60"
+                  cy="60"
+                  r={R}
+                  fill="none"
+                  stroke="var(--secondary)"
+                  strokeWidth="5"
+                />
+                <circle
+                  cx="60"
+                  cy="60"
+                  r={R}
+                  fill="none"
+                  stroke="var(--rose-deep)"
+                  strokeWidth="5"
+                  strokeLinecap="round"
+                  strokeDasharray={CIRC}
+                  strokeDashoffset={ringOffset}
+                  className="transition-all duration-1000"
+                />
+              </svg>
+              <div className="absolute inset-0 grid place-items-center text-center">
+                <div>
+                  <p className="font-serif text-3xl leading-none">{piece.confidence}</p>
+                  <p className="mt-1 text-[10px] uppercase tracking-widest text-muted-foreground">
+                    / 100
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div>
+              <p className="text-eyebrow">best match</p>
+              <p className="mt-2 font-serif text-4xl sm:text-5xl">
+                <span className="italic text-rose-deep">{outcome.label}</span>
+              </p>
+              <p className="mt-3 max-w-sm text-sm leading-relaxed text-muted-foreground">
+                {explanation}
+              </p>
+            </div>
           </div>
 
-          <div className="mt-10 grid gap-4 sm:grid-cols-3">
-            <Stat label="confidence" value={`${piece.confidence}%`} />
-            <Stat label="co₂ kept back" value={`${piece.co2} kg`} sage />
-            <Stat label="water saved" value={`${piece.water.toLocaleString()} l`} sage />
-          </div>
-
-          <div className="card-soft mt-10 p-7">
-            <p className="text-eyebrow">how to {outcome.verb}</p>
-            <ol className="mt-5 space-y-4">
-              {outcome.steps.map((step, i) => (
-                <li key={step} className="flex gap-4 text-sm leading-relaxed">
-                  <span className="font-serif text-lg text-petal">0{i + 1}</span>
-                  <span className="text-muted-foreground">{step}</span>
-                </li>
-              ))}
-            </ol>
-          </div>
-
+          {/* Six thin score bars */}
           <div className="mt-10">
-            <p className="text-eyebrow">other paths considered</p>
+            <p className="text-eyebrow">the full picture</p>
             <div className="mt-5 space-y-3">
-              {piece.scores.slice(1, 4).map((s) => (
+              {piece.scores.map((s) => (
                 <div key={s.outcome} className="flex items-center gap-4">
                   <span className="w-24 shrink-0 text-sm text-muted-foreground">
                     {OUTCOMES[s.outcome].label}
                   </span>
-                  <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-secondary">
+                  <span className="h-1 flex-1 overflow-hidden rounded-full bg-secondary">
                     <span
-                      className="block h-full rounded-full bg-petal transition-all duration-700"
-                      style={{ width: `${Math.round((s.score / max) * 100)}%` }}
+                      className={`block h-full rounded-full transition-all duration-700 ${
+                        s.outcome === piece.outcome ? "bg-rose-deep" : "bg-petal"
+                      }`}
+                      style={{ width: `${s.score}%` }}
                     />
                   </span>
+                  <span className="w-8 text-right text-xs text-muted-foreground">{s.score}</span>
                 </div>
               ))}
             </div>
           </div>
-
-          <div className="mt-10 flex flex-wrap items-center gap-4">
-            <AnalyzeButton label="analyze another ♡" />
-            <Link
-              to="/pieces"
-              className="text-sm tracking-wide text-muted-foreground underline decoration-border underline-offset-8 transition-colors hover:text-foreground"
-            >
-              see my pieces
-            </Link>
-          </div>
         </div>
       </div>
-    </div>
-  );
-}
 
-function Stat({ label, value, sage }: { label: string; value: string; sage?: boolean }) {
-  return (
-    <div
-      className={`rounded-xl border border-border px-5 py-4 ${sage ? "bg-sage/25" : "bg-blush/60"}`}
-    >
-      <p className="text-eyebrow">{label}</p>
-      <p className="mt-2 font-serif text-2xl">{value}</p>
+      {/* Ideas */}
+      <section className="mt-20">
+        <h2 className="text-center text-3xl sm:text-4xl">what could it become?</h2>
+        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {ideas.map((idea) => (
+            <article key={idea.title} className="card-soft flex flex-col p-6">
+              <p className="text-eyebrow">{idea.difficulty}</p>
+              <h3 className="mt-3 font-serif text-2xl">{idea.title}</h3>
+              <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
+                {idea.description}
+              </p>
+              <p className="mt-5 border-t border-border pt-4 text-xs tracking-wide text-muted-foreground">
+                reuse potential{" "}
+                <span className="ml-1 text-rose-deep">
+                  {"●".repeat(idea.potential === "high" ? 3 : idea.potential === "medium" ? 2 : 1)}
+                  <span className="text-border">
+                    {"●".repeat(idea.potential === "high" ? 0 : idea.potential === "medium" ? 1 : 2)}
+                  </span>
+                </span>
+              </p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* Actions */}
+      <div className="mt-16 flex flex-wrap items-center justify-center gap-4">
+        {saved ? (
+          <Link
+            to="/pieces"
+            className="rounded-lg bg-primary px-7 py-3.5 text-sm lowercase tracking-wide text-primary-foreground shadow-soft transition-colors hover:bg-rose-deep"
+          >
+            saved — see my pieces ♡
+          </Link>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setSaved(true)}
+            className="rounded-lg bg-primary px-7 py-3.5 text-sm lowercase tracking-wide text-primary-foreground shadow-soft transition-colors hover:bg-rose-deep"
+          >
+            save my piece ♡
+          </button>
+        )}
+        <button
+          type="button"
+          onClick={() => navigate({ to: "/analyze" })}
+          className="rounded-lg border border-border bg-card px-7 py-3.5 text-sm lowercase tracking-wide text-foreground transition-colors hover:border-rose/60"
+        >
+          analyze another
+        </button>
+      </div>
     </div>
   );
 }
