@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import {
   IDEAS,
   OUTCOMES,
+  damageDesigns,
   explainResult,
+  isDamaged,
   loadPieces,
   type Piece,
 } from "@/lib/rewearie";
