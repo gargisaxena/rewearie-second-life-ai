@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import {
   IDEAS,
   OUTCOMES,
+  damageDesigns,
   explainResult,
+  isDamaged,
   loadPieces,
   type Piece,
 } from "@/lib/rewearie";
@@ -211,6 +213,70 @@ function Results() {
           ))}
         </div>
       </section>
+
+      {/* damage → design */}
+      {isDamaged(piece.condition) && (
+        <section className="mt-24">
+          <div className="relative overflow-hidden rounded-3xl border border-border bg-blush/60 px-6 py-12 sm:px-12 sm:py-16">
+            {/* soft editorial backdrop shapes */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full opacity-70"
+              style={{ background: "radial-gradient(circle, var(--petal), transparent 70%)" }}
+            />
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -bottom-28 -left-16 h-80 w-80 rounded-full opacity-60"
+              style={{ background: "radial-gradient(circle, var(--sage), transparent 70%)" }}
+            />
+
+            <div className="relative text-center">
+              <p className="text-eyebrow">damage → design</p>
+              <h2 className="mx-auto mt-4 max-w-xl text-3xl sm:text-4xl">
+                what if the imperfect part became the{" "}
+                <span className="italic text-rose-deep">best part?</span>
+              </h2>
+              <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted-foreground">
+                Instead of hiding the damage, these transformations make it the detail the whole
+                piece is remembered for.
+              </p>
+            </div>
+
+            <div className="relative mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+              {damageDesigns(piece.category, piece.condition).map((d) => (
+                <article
+                  key={d.title}
+                  className="card-soft flex flex-col p-6 transition-transform duration-300 hover:-translate-y-1"
+                >
+                  <p className="font-serif text-2xl text-rose-deep">{d.icon}</p>
+                  <h3 className="mt-3 font-serif text-xl leading-snug">{d.title}</h3>
+                  <p className="mt-2 flex-1 text-xs leading-relaxed text-muted-foreground">
+                    {d.description}
+                  </p>
+                  <dl className="mt-5 space-y-2 border-t border-border pt-4 text-[11px] tracking-wide">
+                    <div className="flex items-center justify-between">
+                      <dt className="uppercase text-muted-foreground">difficulty</dt>
+                      <dd className="text-foreground">{d.difficulty}</dd>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <dt className="uppercase text-muted-foreground">potential</dt>
+                      <dd className="text-rose-deep">
+                        {"●".repeat(d.potential === "high" ? 3 : d.potential === "medium" ? 2 : 1)}
+                        <span className="text-border">
+                          {"●".repeat(d.potential === "high" ? 0 : d.potential === "medium" ? 1 : 2)}
+                        </span>
+                      </dd>
+                    </div>
+                  </dl>
+                  <p className="mt-4 border-t border-border pt-3 text-[11px] italic leading-relaxed text-muted-foreground">
+                    {d.style}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Actions */}
       <div className="mt-16 flex flex-wrap items-center justify-center gap-4">
