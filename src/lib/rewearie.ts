@@ -344,6 +344,100 @@ export type Idea = {
   potential: "low" | "medium" | "high";
 };
 
+// ── damage → design ─────────────────────────────────────────────────────────
+
+export type DamageDesign = {
+  icon: string;
+  title: string;
+  difficulty: "easy" | "moderate" | "a weekend";
+  description: string;
+  potential: "low" | "medium" | "high";
+  /** Editorial style direction, tailored to the garment category. */
+  style: string;
+};
+
+/** True when the damage → design feature applies to a piece. */
+export function isDamaged(condition: string): boolean {
+  return condition === "Small damage" || condition === "Beyond wearing";
+}
+
+const DAMAGE_DIRECTIONS: Record<string, string> = {
+  "Top / blouse": "quiet parisian — fine sashiko stitches in tonal thread, cuffs worn loose",
+  Dress: "prairie-romantic — scattered floral embroidery drifting up from the hem",
+  Knitwear: "wabi-sabi — contrasting darning wool worn as a deliberate, visible detail",
+  Denim: "workwear-poetic — raw-edged indigo patches and visible white running stitch",
+  Outerwear: "utility-elegant — oversized contrast pocket patching in waxed cotton",
+  "Trousers / skirt": "studio-tailored — asymmetric panels and a clean cropped line",
+  "Shoes / accessory": "atelier-detail — brass hardware and hand-finished edges",
+};
+
+/**
+ * damage → design: creative transformations that turn the imperfect part of a
+ * damaged garment into its best feature. Deterministic — shaped only by the
+ * garment's category and damage level ("Small damage" | "Beyond wearing").
+ */
+export function damageDesigns(category: string, condition: string): DamageDesign[] {
+  const beyond = condition === "Beyond wearing";
+  const style =
+    DAMAGE_DIRECTIONS[category] ??
+    "quiet parisian — tonal visible mending worn with confidence";
+
+  const designs: DamageDesign[] = [
+    {
+      icon: "✦",
+      title: "visible mending",
+      difficulty: "easy",
+      description:
+        "Darn the worn spot with a contrasting thread so the repair itself becomes the detail everyone asks about.",
+      potential: "high",
+      style,
+    },
+    {
+      icon: "✿",
+      title: "decorative embroidery",
+      difficulty: "moderate",
+      description:
+        "Trace the damage with a fine line of stitching — a small constellation of thread that turns the flaw into a motif.",
+      potential: "medium",
+      style,
+    },
+    {
+      icon: "◩",
+      title: "contrast patchwork",
+      difficulty: "moderate",
+      description:
+        "Layer a considered scrap of fabric over the worn area — raw edges visible, seams intentional.",
+      potential: "high",
+      style,
+    },
+    {
+      icon: "✂",
+      title: "crop and reshape",
+      difficulty: "a weekend",
+      description: beyond
+        ? "Cut away what can no longer be saved and re-hem the rest into a shorter, sharper silhouette."
+        : "Remove the damaged section entirely and re-hem the piece into a cropped, modern proportion.",
+      potential: "medium",
+      style,
+    },
+    {
+      icon: "♡",
+      title: "transform into an accessory",
+      difficulty: "a weekend",
+      description: beyond
+        ? "The fabric is still beautiful — let it begin again as a tote, a pouch, or a set of scrunchies."
+        : "Save the strongest panels and give them a second life as a small, everyday accessory.",
+      potential: beyond ? "high" : "low",
+      style,
+    },
+  ];
+
+  // Heavily damaged pieces lead with transformation; lightly damaged lead with repair.
+  return beyond
+    ? [designs[4]!, designs[3]!, designs[2]!, designs[0]!, designs[1]!]
+    : designs;
+}
+
 /** Elegant transformation ideas per best-match outcome. */
 export const IDEAS: Record<Outcome, Idea[]> = {
   rewear: [
