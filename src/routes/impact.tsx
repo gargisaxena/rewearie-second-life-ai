@@ -208,7 +208,7 @@ function ScoreRing({ score }: { score: number }) {
           cy="60"
           r={radius}
           fill="none"
-          stroke="hsl(var(--secondary))"
+          stroke="var(--secondary)"
           strokeWidth="8"
         />
         <circle
@@ -216,7 +216,7 @@ function ScoreRing({ score }: { score: number }) {
           cy="60"
           r={radius}
           fill="none"
-          stroke="hsl(var(--sage))"
+          stroke="var(--sage)"
           strokeWidth="8"
           strokeLinecap="round"
           strokeDasharray={circumference}
