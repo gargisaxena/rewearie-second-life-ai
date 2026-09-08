@@ -1,12 +1,48 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 const NAV = [
   { to: "/analyze", label: "Analyze" },
   { to: "/pieces", label: "My Pieces" },
   { to: "/impact", label: "Impact" },
 ] as const;
+
+function AuthLink({ onNavigate }: { onNavigate?: () => void }) {
+  const { user, ready } = useAuth();
+  const navigate = useNavigate();
+
+  if (!ready) return null;
+
+  if (!user) {
+    return (
+      <Link
+        to="/auth"
+        onClick={onNavigate}
+        className="text-sm tracking-wide text-muted-foreground transition-colors hover:text-foreground"
+      >
+        Sign in
+      </Link>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={async () => {
+        onNavigate?.();
+        await supabase.auth.signOut();
+        navigate({ to: "/", replace: true });
+      }}
+      className="text-sm tracking-wide text-muted-foreground transition-colors hover:text-foreground"
+    >
+      Sign out
+    </button>
+  );
+}
 
 export function Wordmark({ className = "" }: { className?: string }) {
   return (
