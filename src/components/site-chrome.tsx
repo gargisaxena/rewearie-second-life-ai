@@ -119,6 +119,9 @@ export function SiteHeader() {
                 {item.label}
               </Link>
             ))}
+            <div className="px-2 py-3">
+              <AuthLink onNavigate={() => setOpen(false)} />
+            </div>
           </nav>
           <AnalyzeButton className="mt-3 w-full" />
         </div>
