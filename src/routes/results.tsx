@@ -340,10 +340,11 @@ function Results() {
         ) : (
           <button
             type="button"
-            onClick={() => setSaved(true)}
-            className="rounded-lg bg-primary px-7 py-3.5 text-sm lowercase tracking-wide text-primary-foreground shadow-soft transition-colors hover:bg-rose-deep"
+            disabled={saving}
+            onClick={() => void handleSave()}
+            className="rounded-lg bg-primary px-7 py-3.5 text-sm lowercase tracking-wide text-primary-foreground shadow-soft transition-colors hover:bg-rose-deep disabled:opacity-70"
           >
-            save my piece ♡
+            {saving ? "saving…" : "save my piece ♡"}
           </button>
         )}
         <button
@@ -353,6 +354,9 @@ function Results() {
         >
           analyze another
         </button>
+        {saveError && (
+          <p className="w-full text-center text-xs text-rose-deep">{saveError}</p>
+        )}
       </div>
     </div>
   );
