@@ -91,6 +91,7 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
+          <AuthLink />
           <AnalyzeButton className="px-5 py-2.5" />
         </nav>
 
