@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AnalyzeRouteImport } from './routes/analyze'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ImpactRouteImport } from './routes/impact'
 import { Route as PiecesRouteImport } from './routes/pieces'
 import { Route as ResultsRouteImport } from './routes/results'
@@ -23,6 +24,11 @@ const IndexRoute = IndexRouteImport.update({
 const AnalyzeRoute = AnalyzeRouteImport.update({
   id: '/analyze',
   path: '/analyze',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ImpactRoute = ImpactRouteImport.update({
@@ -44,6 +50,7 @@ const ResultsRoute = ResultsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/analyze': typeof AnalyzeRoute
+  '/auth': typeof AuthRoute
   '/impact': typeof ImpactRoute
   '/pieces': typeof PiecesRoute
   '/results': typeof ResultsRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/analyze': typeof AnalyzeRoute
+  '/auth': typeof AuthRoute
   '/impact': typeof ImpactRoute
   '/pieces': typeof PiecesRoute
   '/results': typeof ResultsRoute
@@ -59,21 +67,24 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/analyze': typeof AnalyzeRoute
+  '/auth': typeof AuthRoute
   '/impact': typeof ImpactRoute
   '/pieces': typeof PiecesRoute
   '/results': typeof ResultsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/analyze' | '/impact' | '/pieces' | '/results'
+  fullPaths: '/' | '/analyze' | '/auth' | '/impact' | '/pieces' | '/results'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/analyze' | '/impact' | '/pieces' | '/results'
-  id: '__root__' | '/' | '/analyze' | '/impact' | '/pieces' | '/results'
+  to: '/' | '/analyze' | '/auth' | '/impact' | '/pieces' | '/results'
+  id:
+    '__root__' | '/' | '/analyze' | '/auth' | '/impact' | '/pieces' | '/results'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnalyzeRoute: typeof AnalyzeRoute
+  AuthRoute: typeof AuthRoute
   ImpactRoute: typeof ImpactRoute
   PiecesRoute: typeof PiecesRoute
   ResultsRoute: typeof ResultsRoute
@@ -93,6 +104,13 @@ declare module '@tanstack/react-router' {
       path: '/analyze'
       fullPath: '/analyze'
       preLoaderRoute: typeof AnalyzeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/impact': {
@@ -122,6 +140,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnalyzeRoute: AnalyzeRoute,
+  AuthRoute: AuthRoute,
   ImpactRoute: ImpactRoute,
   PiecesRoute: PiecesRoute,
   ResultsRoute: ResultsRoute,

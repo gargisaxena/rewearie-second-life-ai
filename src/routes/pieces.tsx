@@ -2,13 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Trash2 } from "lucide-react";
 
-import {
-  OUTCOMES,
-  OUTCOME_ORDER,
-  loadPieces,
-  removePiece,
-  type Piece,
-} from "@/lib/rewearie";
+import { OUTCOMES, OUTCOME_ORDER, type Piece } from "@/lib/rewearie";
+import { deletePiece, fetchPieces } from "@/lib/pieces-store";
+import { useAuth } from "@/hooks/useAuth";
 import { AnalyzeButton } from "@/components/site-chrome";
 
 export const Route = createFileRoute("/pieces")({
@@ -102,6 +98,7 @@ function PieceCard({
 }
 
 function MyPieces() {
+  const { user, ready: authReady } = useAuth();
   const [pieces, setPieces] = useState<Piece[]>([]);
   const [ready, setReady] = useState(false);
   const [filter, setFilter] = useState<"all" | (typeof OUTCOME_ORDER)[number]>(
@@ -109,17 +106,54 @@ function MyPieces() {
   );
 
   useEffect(() => {
-    setPieces(loadPieces());
-    setReady(true);
-  }, []);
+    let active = true;
+    if (!authReady) return;
+    if (!user) {
+      setPieces([]);
+      setReady(true);
+      return;
+    }
+    void fetchPieces()
+      .then((rows) => {
+        if (active) setPieces(rows);
+      })
+      .catch(() => {
+        if (active) setPieces([]);
+      })
+      .finally(() => {
+        if (active) setReady(true);
+      });
+    return () => {
+      active = false;
+    };
+  }, [authReady, user]);
 
   const shown =
     filter === "all" ? pieces : pieces.filter((p) => p.outcome === filter);
 
   const handleRemove = (id: string) => {
-    removePiece(id);
-    setPieces(loadPieces());
+    setPieces((prev) => prev.filter((p) => p.id !== id));
+    void deletePiece(id).catch(() => undefined);
   };
+
+  if (authReady && !user) {
+    return (
+      <div className="mx-auto max-w-xl px-5 py-24 text-center sm:px-8">
+        <p className="text-eyebrow">the archive</p>
+        <h1 className="mt-4 text-4xl sm:text-5xl">your pieces, kept safely ♡</h1>
+        <p className="mx-auto mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
+          Sign in to keep every piece you analyze and revisit its next life whenever you like.
+        </p>
+        <Link
+          to="/auth"
+          search={{ next: "/pieces" }}
+          className="mt-8 inline-block rounded-lg bg-primary px-7 py-3.5 text-sm lowercase tracking-wide text-primary-foreground shadow-soft transition-colors hover:bg-rose-deep"
+        >
+          sign in ♡
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8 lg:py-20">

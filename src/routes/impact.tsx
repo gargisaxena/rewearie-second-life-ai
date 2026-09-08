@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 
-import { OUTCOMES, OUTCOME_ORDER, loadPieces, type Outcome, type Piece } from "@/lib/rewearie";
+import { OUTCOMES, OUTCOME_ORDER, type Outcome, type Piece } from "@/lib/rewearie";
+import { fetchPieces } from "@/lib/pieces-store";
+import { useAuth } from "@/hooks/useAuth";
 import { AnalyzeButton } from "@/components/site-chrome";
 
 export const Route = createFileRoute("/impact")({
@@ -33,11 +35,24 @@ const CIRCULARITY_WEIGHT: Record<Outcome, number> = {
 };
 
 function Impact() {
+  const { user, ready: authReady } = useAuth();
   const [pieces, setPieces] = useState<Piece[]>([]);
 
   useEffect(() => {
-    setPieces(loadPieces());
-  }, []);
+    let active = true;
+    if (!authReady || !user) {
+      setPieces([]);
+      return;
+    }
+    void fetchPieces()
+      .then((rows) => {
+        if (active) setPieces(rows);
+      })
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
+  }, [authReady, user]);
 
   const total = pieces.length;
 

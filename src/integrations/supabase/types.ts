@@ -14,7 +14,69 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      pieces: {
+        Row: {
+          best_recommendation: string
+          category: string | null
+          condition: string
+          confidence: number
+          created_at: string
+          donate_score: number
+          id: string
+          image_url: string | null
+          name: string
+          preferences: string[]
+          reason_not_worn: string
+          recycle_score: number
+          repair_score: number
+          resell_score: number
+          rewear_score: number
+          upcycle_score: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          best_recommendation: string
+          category?: string | null
+          condition: string
+          confidence?: number
+          created_at?: string
+          donate_score?: number
+          id?: string
+          image_url?: string | null
+          name?: string
+          preferences?: string[]
+          reason_not_worn: string
+          recycle_score?: number
+          repair_score?: number
+          resell_score?: number
+          rewear_score?: number
+          upcycle_score?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          best_recommendation?: string
+          category?: string | null
+          condition?: string
+          confidence?: number
+          created_at?: string
+          donate_score?: number
+          id?: string
+          image_url?: string | null
+          name?: string
+          preferences?: string[]
+          reason_not_worn?: string
+          recycle_score?: number
+          repair_score?: number
+          resell_score?: number
+          rewear_score?: number
+          upcycle_score?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

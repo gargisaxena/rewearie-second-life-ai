@@ -7,9 +7,10 @@ import {
   damageDesigns,
   explainResult,
   isDamaged,
-  loadPieces,
   type Piece,
 } from "@/lib/rewearie";
+import { DRAFT_ID, clearDraft, fetchPiece, loadDraft, savePiece } from "@/lib/pieces-store";
+import { useAuth } from "@/hooks/useAuth";
 
 type Search = { id?: string | undefined };
 
@@ -38,15 +39,64 @@ export const Route = createFileRoute("/results")({
 function Results() {
   const { id } = Route.useSearch();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [piece, setPiece] = useState<Piece | null>(null);
   const [ready, setReady] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+
+  const isDraft = !id || id === DRAFT_ID;
 
   useEffect(() => {
-    const all = loadPieces();
-    setPiece(all.find((p) => p.id === id) ?? all[0] ?? null);
-    setReady(true);
-  }, [id]);
+    let active = true;
+    setReady(false);
+    setSaved(false);
+
+    async function load() {
+      if (isDraft) {
+        if (!active) return;
+        setPiece(loadDraft());
+        setReady(true);
+        return;
+      }
+      try {
+        const found = await fetchPiece(id!);
+        if (!active) return;
+        setPiece(found);
+        setSaved(Boolean(found));
+      } catch {
+        if (active) setPiece(null);
+      } finally {
+        if (active) setReady(true);
+      }
+    }
+
+    void load();
+    return () => {
+      active = false;
+    };
+  }, [id, isDraft]);
+
+  async function handleSave() {
+    if (!piece) return;
+    if (!user) {
+      navigate({ to: "/auth", search: { next: "/results" } });
+      return;
+    }
+    setSaving(true);
+    setSaveError(null);
+    try {
+      const newId = await savePiece(piece, user.id);
+      clearDraft();
+      setSaved(true);
+      navigate({ to: "/results", search: { id: newId }, replace: true });
+    } catch {
+      setSaveError("We couldn't save this piece just now. Please try again.");
+    } finally {
+      setSaving(false);
+    }
+  }
 
   if (!ready) {
     return <div className="mx-auto max-w-5xl px-5 py-24 sm:px-8" />;
@@ -290,10 +340,11 @@ function Results() {
         ) : (
           <button
             type="button"
-            onClick={() => setSaved(true)}
-            className="rounded-lg bg-primary px-7 py-3.5 text-sm lowercase tracking-wide text-primary-foreground shadow-soft transition-colors hover:bg-rose-deep"
+            disabled={saving}
+            onClick={() => void handleSave()}
+            className="rounded-lg bg-primary px-7 py-3.5 text-sm lowercase tracking-wide text-primary-foreground shadow-soft transition-colors hover:bg-rose-deep disabled:opacity-70"
           >
-            save my piece ♡
+            {saving ? "saving…" : "save my piece ♡"}
           </button>
         )}
         <button
@@ -303,6 +354,9 @@ function Results() {
         >
           analyze another
         </button>
+        {saveError && (
+          <p className="w-full text-center text-xs text-rose-deep">{saveError}</p>
+        )}
       </div>
     </div>
   );
