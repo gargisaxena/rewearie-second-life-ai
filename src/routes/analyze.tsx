@@ -6,12 +6,12 @@ import {
   OPEN_TO_OPTIONS,
   UI_CONDITIONS,
   UI_REASONS,
-  addPiece,
   analyse,
   impactFor,
   type Outcome,
   type Piece,
 } from "@/lib/rewearie";
+import { DRAFT_ID, saveDraft } from "@/lib/pieces-store";
 
 export const Route = createFileRoute("/analyze")({
   head: () => ({
@@ -116,7 +116,7 @@ function Analyze() {
     const result = analyse({ category: DEFAULT_CATEGORY, condition, reason, openTo });
     const impact = impactFor(DEFAULT_CATEGORY);
     const piece: Piece = {
-      id: `${Date.now()}`,
+      id: DRAFT_ID,
       name: DEFAULT_CATEGORY,
       category: DEFAULT_CATEGORY,
       condition,
@@ -131,8 +131,8 @@ function Analyze() {
       openTo,
     };
     window.setTimeout(() => {
-      addPiece(piece);
-      navigate({ to: "/results", search: { id: piece.id } });
+      saveDraft(piece);
+      navigate({ to: "/results", search: { id: DRAFT_ID } });
     }, 1100);
   }
 
