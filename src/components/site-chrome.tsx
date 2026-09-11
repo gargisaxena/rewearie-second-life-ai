@@ -22,9 +22,9 @@ function AuthLink({ onNavigate }: { onNavigate?: () => void }) {
       <Link
         to="/auth"
         onClick={onNavigate}
-        className="text-sm tracking-wide text-muted-foreground transition-colors hover:text-foreground"
+        className="text-[0.8125rem] lowercase tracking-[0.12em] text-muted-foreground transition-colors duration-300 hover:text-rose-deep"
       >
-        Sign in
+        sign in
       </Link>
     );
   }
@@ -37,12 +37,13 @@ function AuthLink({ onNavigate }: { onNavigate?: () => void }) {
         await supabase.auth.signOut();
         navigate({ to: "/", replace: true });
       }}
-      className="text-sm tracking-wide text-muted-foreground transition-colors hover:text-foreground"
+      className="text-[0.8125rem] lowercase tracking-[0.12em] text-muted-foreground transition-colors duration-300 hover:text-rose-deep"
     >
-      Sign out
+      sign out
     </button>
   );
 }
+
 
 export function Wordmark({ className = "" }: { className?: string }) {
   return (
