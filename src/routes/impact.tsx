@@ -83,29 +83,31 @@ function Impact() {
   const maxCount = Math.max(1, ...counts.map((c) => c.count));
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8 lg:py-20">
-      <div className="max-w-2xl">
+    <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 lg:py-24">
+      <div className="rise-in max-w-2xl">
         <p className="text-eyebrow">your impact</p>
-        <h1 className="mt-4 text-4xl sm:text-5xl lg:text-6xl">
+        <h1 className="mt-5 text-4xl sm:text-5xl lg:text-6xl">
           little choices. <span className="italic text-rose-deep">longer lives.</span>
         </h1>
-        <p className="mt-5 text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-6 text-lede">
           Every piece you give another life is one less piece forgotten. Here is what you have
           actually chosen to do.
         </p>
       </div>
 
       {total === 0 ? (
-        <div className="mt-16 rounded-2xl border border-border bg-secondary/50 px-6 py-14 text-center sm:px-16">
-          <h2 className="mx-auto max-w-xl text-2xl italic sm:text-3xl">
-            No pieces analyzed yet.
+        <div className="fade-in-soft mt-16 rounded-xl border border-dashed border-rose/40 bg-blush/35 px-6 py-24 text-center sm:px-16">
+          <p className="font-serif text-3xl text-rose-deep">♡</p>
+          <h2 className="mx-auto mt-5 max-w-xl text-3xl italic sm:text-4xl">
+            no pieces analyzed yet.
           </h2>
-          <p className="mx-auto mt-4 max-w-md text-sm text-muted-foreground">
+          <p className="mx-auto mt-5 max-w-md text-lede">
             Analyze your first piece and watch this space fill up with the choices that keep your
             clothes in use.
           </p>
-          <AnalyzeButton className="mt-8 px-7 py-3.5 text-base" />
+          <AnalyzeButton className="mt-9" />
         </div>
+
       ) : (
         <>
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
