@@ -172,9 +172,10 @@ function Results() {
 
         {/* RIGHT — the report */}
         <div>
-          <p className="text-eyebrow">your rewearie report</p>
+          <p className="text-eyebrow">the details</p>
 
           <dl className="mt-6 grid grid-cols-2 gap-4">
+
             <div className="rounded-xl border border-border bg-card px-5 py-4">
               <dt className="text-eyebrow">item</dt>
               <dd className="mt-2 font-serif text-xl">{piece.name}</dd>
