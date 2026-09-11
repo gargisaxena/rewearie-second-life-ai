@@ -112,15 +112,16 @@ function Home() {
           <p className="mt-7 max-w-md text-base leading-relaxed text-muted-foreground">
             Upload a piece you no longer wear and discover its next possible life.
           </p>
-          <div className="mt-9 flex flex-wrap items-center gap-5">
-            <AnalyzeButton className="px-7 py-3.5 text-base" />
+          <div className="mt-10 flex flex-wrap items-center gap-6">
+            <AnalyzeButton />
             <a
               href="#how-it-works"
-              className="text-sm tracking-wide text-muted-foreground underline decoration-border underline-offset-8 transition-colors hover:text-foreground"
+              className="text-[0.8125rem] lowercase tracking-[0.1em] text-muted-foreground underline decoration-border underline-offset-8 transition-colors hover:text-rose-deep"
             >
               how it works
             </a>
           </div>
+
         </div>
 
         <div className="fade-in-soft order-1 lg:order-2">
