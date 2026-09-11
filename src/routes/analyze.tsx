@@ -236,11 +236,12 @@ function Analyze() {
         <button
           type="submit"
           disabled={working}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-4 text-base lowercase tracking-wide text-primary-foreground shadow-soft transition-all duration-300 hover:bg-rose-deep disabled:opacity-70"
+          className="btn-base btn-primary w-full py-4 text-sm"
         >
           {working && <Loader2 className="h-4 w-4 animate-spin" />}
           {working ? "reading the piece…" : "find its next life ♡"}
         </button>
+
       </form>
     </div>
   );
