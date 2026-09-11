@@ -142,15 +142,17 @@ function Results() {
   const ringOffset = CIRC * (1 - piece.confidence / 100);
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8 lg:py-20">
+    <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 lg:py-24">
       <header className="rise-in text-center">
-        <h1 className="text-4xl sm:text-5xl">your piece has potential ♡</h1>
-        <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted-foreground">
+        <p className="text-eyebrow">your rewearie report</p>
+        <h1 className="mt-5 text-4xl sm:text-5xl lg:text-6xl">your piece has potential ♡</h1>
+        <p className="mx-auto mt-5 max-w-md text-lede">
           Here is its personal rewearie report — read it like a love letter to its next life.
         </p>
       </header>
 
-      <div className="rise-in mt-14 grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
+      <div className="rise-in-slow mt-16 grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
+
         {/* LEFT — the piece */}
         <div>
           {piece.photo ? (
