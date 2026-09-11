@@ -187,7 +187,7 @@ function Results() {
           </dl>
 
           {/* Best match + circular score */}
-          <div className="card-soft mt-6 flex items-center gap-8 p-7">
+          <div className="card-soft mt-4 flex flex-col items-center gap-7 p-7 text-center sm:flex-row sm:gap-8 sm:p-8 sm:text-left">
             <div className="relative h-32 w-32 shrink-0">
               <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
                 <circle
