@@ -1,5 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { Loader2 } from "lucide-react";
+
 
 import {
   IDEAS,
@@ -99,25 +101,37 @@ function Results() {
   }
 
   if (!ready) {
-    return <div className="mx-auto max-w-5xl px-5 py-24 sm:px-8" />;
+    return (
+      <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 lg:py-24">
+        <div className="mx-auto h-9 w-72 max-w-full skeleton" />
+        <div className="mt-16 grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
+          <div className="skeleton aspect-[4/5] w-full rounded-xl" />
+          <div className="space-y-5">
+            <div className="skeleton h-3 w-32" />
+            <div className="skeleton h-24 w-full" />
+            <div className="skeleton h-40 w-full" />
+            <div className="skeleton h-24 w-full" />
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (!piece) {
     return (
-      <div className="mx-auto max-w-xl px-5 py-24 text-center sm:px-8">
-        <h1 className="text-4xl">Nothing to show yet.</h1>
-        <p className="mt-4 text-sm text-muted-foreground">
+      <div className="rise-in mx-auto max-w-xl px-5 py-24 text-center sm:px-8 lg:py-32">
+        <p className="text-eyebrow">nothing here yet</p>
+        <h1 className="mt-5 text-4xl sm:text-5xl">no report to read.</h1>
+        <p className="mx-auto mt-5 max-w-sm text-lede">
           Analyze a piece and its personal report will appear here.
         </p>
-        <Link
-          to="/analyze"
-          className="mt-8 inline-block rounded-lg bg-primary px-6 py-3 text-sm lowercase tracking-wide text-primary-foreground transition-colors hover:bg-rose-deep"
-        >
+        <Link to="/analyze" className="btn-base btn-primary mt-9">
           analyze a piece ♡
         </Link>
       </div>
     );
   }
+
 
   const outcome = OUTCOMES[piece.outcome];
   
@@ -130,15 +144,17 @@ function Results() {
   const ringOffset = CIRC * (1 - piece.confidence / 100);
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8 lg:py-20">
+    <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 lg:py-24">
       <header className="rise-in text-center">
-        <h1 className="text-4xl sm:text-5xl">your piece has potential ♡</h1>
-        <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted-foreground">
+        <p className="text-eyebrow">your rewearie report</p>
+        <h1 className="mt-5 text-4xl sm:text-5xl lg:text-6xl">your piece has potential ♡</h1>
+        <p className="mx-auto mt-5 max-w-md text-lede">
           Here is its personal rewearie report — read it like a love letter to its next life.
         </p>
       </header>
 
-      <div className="rise-in mt-14 grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
+      <div className="rise-in-slow mt-16 grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
+
         {/* LEFT — the piece */}
         <div>
           {piece.photo ? (
@@ -156,9 +172,10 @@ function Results() {
 
         {/* RIGHT — the report */}
         <div>
-          <p className="text-eyebrow">your rewearie report</p>
+          <p className="text-eyebrow">the details</p>
 
           <dl className="mt-6 grid grid-cols-2 gap-4">
+
             <div className="rounded-xl border border-border bg-card px-5 py-4">
               <dt className="text-eyebrow">item</dt>
               <dd className="mt-2 font-serif text-xl">{piece.name}</dd>
@@ -170,7 +187,7 @@ function Results() {
           </dl>
 
           {/* Best match + circular score */}
-          <div className="card-soft mt-6 flex items-center gap-8 p-7">
+          <div className="card-soft mt-4 flex flex-col items-center gap-7 p-7 text-center sm:flex-row sm:gap-8 sm:p-8 sm:text-left">
             <div className="relative h-32 w-32 shrink-0">
               <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
                 <circle
@@ -329,12 +346,9 @@ function Results() {
       )}
 
       {/* Actions */}
-      <div className="mt-16 flex flex-wrap items-center justify-center gap-4">
+      <div className="mt-20 flex flex-col items-stretch justify-center gap-3 border-t border-border/60 pt-12 sm:flex-row sm:items-center sm:gap-4">
         {saved ? (
-          <Link
-            to="/pieces"
-            className="rounded-lg bg-primary px-7 py-3.5 text-sm lowercase tracking-wide text-primary-foreground shadow-soft transition-colors hover:bg-rose-deep"
-          >
+          <Link to="/pieces" className="btn-base btn-primary">
             saved — see my pieces ♡
           </Link>
         ) : (
@@ -342,22 +356,24 @@ function Results() {
             type="button"
             disabled={saving}
             onClick={() => void handleSave()}
-            className="rounded-lg bg-primary px-7 py-3.5 text-sm lowercase tracking-wide text-primary-foreground shadow-soft transition-colors hover:bg-rose-deep disabled:opacity-70"
+            className="btn-base btn-primary"
           >
+            {saving && <Loader2 className="h-4 w-4 animate-spin" />}
             {saving ? "saving…" : "save my piece ♡"}
           </button>
         )}
         <button
           type="button"
           onClick={() => navigate({ to: "/analyze" })}
-          className="rounded-lg border border-border bg-card px-7 py-3.5 text-sm lowercase tracking-wide text-foreground transition-colors hover:border-rose/60"
+          className="btn-base btn-quiet"
         >
           analyze another
         </button>
         {saveError && (
-          <p className="w-full text-center text-xs text-rose-deep">{saveError}</p>
+          <p className="w-full text-center text-xs italic text-rose-deep">{saveError}</p>
         )}
       </div>
+
     </div>
   );
 }

@@ -89,34 +89,30 @@ function AuthPage() {
   }
 
   return (
-    <div className="mx-auto max-w-md px-5 py-16 sm:px-8 lg:py-24">
-      <div className="text-center">
+    <div className="mx-auto max-w-md px-5 py-20 sm:px-8 lg:py-28">
+      <div className="rise-in text-center">
         <p className="text-eyebrow">your archive</p>
-        <h1 className="mt-4 text-4xl sm:text-5xl">
+        <h1 className="mt-5 text-4xl sm:text-5xl">
           {mode === "signin" ? "welcome back ♡" : "keep your pieces ♡"}
         </h1>
-        <p className="mx-auto mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
+        <p className="mx-auto mt-5 max-w-sm text-lede">
           Sign in so every piece you analyze is kept, and you can revisit its next life whenever you
           like.
         </p>
       </div>
 
-      <div className="card-soft mt-10 p-7">
-        <button
-          type="button"
-          onClick={google}
-          className="w-full rounded-lg border border-border bg-card px-6 py-3 text-sm lowercase tracking-wide text-foreground transition-colors hover:border-rose/60"
-        >
+      <div className="card-soft rise-in-slow mt-12 p-7 sm:p-9">
+        <button type="button" onClick={google} className="btn-base btn-quiet w-full">
           continue with google
         </button>
 
-        <div className="my-6 flex items-center gap-4 text-[0.625rem] uppercase tracking-[0.28em] text-muted-foreground">
+        <div className="my-7 flex items-center gap-4 text-[0.625rem] uppercase tracking-[0.28em] text-muted-foreground">
           <span className="h-px flex-1 bg-border" />
           or
           <span className="h-px flex-1 bg-border" />
         </div>
 
-        <form onSubmit={submit} className="space-y-4">
+        <form onSubmit={submit} className="space-y-5">
           <div>
             <label htmlFor="email" className="text-eyebrow">
               email
@@ -127,7 +123,7 @@ function AuthPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition-colors focus:border-rose"
+              className="mt-3 w-full rounded-md border border-border bg-background px-4 py-3 text-sm outline-none transition-colors duration-300 placeholder:text-muted-foreground focus:border-rose"
             />
           </div>
           <div>
@@ -141,18 +137,14 @@ function AuthPage() {
               minLength={6}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition-colors focus:border-rose"
+              className="mt-3 w-full rounded-md border border-border bg-background px-4 py-3 text-sm outline-none transition-colors duration-300 focus:border-rose"
             />
           </div>
 
-          {error && <p className="text-xs text-rose-deep">{error}</p>}
+          {error && <p className="text-xs italic text-rose-deep">{error}</p>}
           {message && <p className="text-xs italic text-muted-foreground">{message}</p>}
 
-          <button
-            type="submit"
-            disabled={busy}
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3.5 text-sm lowercase tracking-wide text-primary-foreground shadow-soft transition-colors hover:bg-rose-deep disabled:opacity-70"
-          >
+          <button type="submit" disabled={busy} className="btn-base btn-primary w-full">
             {busy && <Loader2 className="h-4 w-4 animate-spin" />}
             {mode === "signin" ? "sign in ♡" : "create my archive ♡"}
           </button>
@@ -165,7 +157,7 @@ function AuthPage() {
             setError(null);
             setMessage(null);
           }}
-          className="mt-5 w-full text-center text-xs lowercase tracking-wide text-muted-foreground transition-colors hover:text-rose-deep"
+          className="mt-7 w-full text-center text-xs lowercase tracking-[0.08em] text-muted-foreground transition-colors hover:text-rose-deep"
         >
           {mode === "signin"
             ? "new here? create an account"
@@ -173,5 +165,6 @@ function AuthPage() {
         </button>
       </div>
     </div>
+
   );
 }

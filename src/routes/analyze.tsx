@@ -65,15 +65,7 @@ function ToggleButton({
   children: React.ReactNode;
 }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`rounded-xl border px-4 py-3 text-sm transition-all duration-300 ${
-        selected
-          ? "border-rose bg-blush text-foreground"
-          : "border-border bg-card text-muted-foreground hover:border-rose/50"
-      }`}
-    >
+    <button type="button" onClick={onClick} className={`chip ${selected ? "chip-on" : ""}`}>
       {children}
     </button>
   );
@@ -82,6 +74,7 @@ function ToggleButton({
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return <h2 className="text-eyebrow">{children}</h2>;
 }
+
 
 function Analyze() {
   const navigate = useNavigate();
@@ -137,24 +130,26 @@ function Analyze() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-5 py-14 sm:px-8 lg:py-20">
-      <div className="text-center">
-        <h1 className="text-4xl sm:text-5xl">what are we working with?</h1>
-        <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted-foreground">
+    <div className="mx-auto max-w-3xl px-5 py-16 sm:px-8 lg:py-24">
+      <div className="rise-in text-center">
+        <p className="text-eyebrow">a new piece</p>
+        <h1 className="mt-5 text-4xl sm:text-5xl lg:text-6xl">what are we working with?</h1>
+        <p className="mx-auto mt-5 max-w-md text-lede">
           show us a piece that deserves another little chance.
         </p>
-        <div className="mt-8">
+        <div className="mt-10">
           <ProgressIndicator />
         </div>
       </div>
 
-      <form onSubmit={submit} className="mt-14 space-y-10">
+      <form onSubmit={submit} className="rise-in-slow mt-16 space-y-12">
         {/* Upload */}
         <section>
           <button
             type="button"
             onClick={() => fileRef.current?.click()}
-            className="group relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-2xl border border-dashed border-rose/60 bg-muted/50 transition-colors hover:bg-muted"
+            className="group relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-xl border border-dashed border-rose/50 bg-blush/25 transition-colors duration-500 hover:border-rose hover:bg-blush/45"
+
           >
             {photo ? (
               <img src={photo} alt="The piece you uploaded" className="h-full w-full object-cover" />
@@ -243,11 +238,12 @@ function Analyze() {
         <button
           type="submit"
           disabled={working}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-4 text-base lowercase tracking-wide text-primary-foreground shadow-soft transition-all duration-300 hover:bg-rose-deep disabled:opacity-70"
+          className="btn-base btn-primary w-full py-4 text-sm"
         >
           {working && <Loader2 className="h-4 w-4 animate-spin" />}
           {working ? "reading the piece…" : "find its next life ♡"}
         </button>
+
       </form>
     </div>
   );

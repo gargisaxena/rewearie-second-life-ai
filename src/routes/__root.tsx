@@ -15,25 +15,24 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
+    <div className="flex min-h-screen items-center justify-center bg-background px-5">
+      <div className="rise-in max-w-md text-center">
+        <p className="text-eyebrow">lost thread</p>
+        <h1 className="mt-5 font-serif text-6xl font-light text-rose-deep">404</h1>
+        <h2 className="mt-5 text-3xl italic">this page slipped away.</h2>
+        <p className="text-lede mx-auto mt-5 max-w-xs">
           The page you're looking for doesn't exist or has been moved.
         </p>
-        <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Go home
+        <div className="mt-9">
+          <Link to="/" className="btn-base btn-primary">
+            back home ♡
           </Link>
         </div>
       </div>
     </div>
   );
 }
+
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
@@ -43,34 +42,31 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   }, [error]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+    <div className="flex min-h-screen items-center justify-center bg-background px-5">
+      <div className="rise-in max-w-md text-center">
+        <p className="text-eyebrow">a small snag</p>
+        <h1 className="mt-5 text-4xl italic">this page didn't load.</h1>
+        <p className="text-lede mx-auto mt-5 max-w-xs">
+          Something went wrong on our end. You can try again or head back home.
         </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
+        <div className="mt-9 flex flex-wrap justify-center gap-3">
           <button
             onClick={() => {
               router.invalidate();
               reset();
             }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="btn-base btn-primary"
           >
-            Try again
+            try again
           </button>
-          <a
-            href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
-          >
-            Go home
+          <a href="/" className="btn-base btn-quiet">
+            go home
           </a>
         </div>
       </div>
     </div>
   );
+
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
