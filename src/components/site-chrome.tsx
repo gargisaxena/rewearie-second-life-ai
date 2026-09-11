@@ -48,7 +48,7 @@ export function Wordmark({ className = "" }: { className?: string }) {
   return (
     <Link
       to="/"
-      className={`font-serif lowercase tracking-tight text-foreground transition-opacity hover:opacity-70 ${className}`}
+      className={`font-serif lowercase tracking-tight text-foreground transition-opacity duration-300 hover:opacity-60 ${className}`}
     >
       rewearie <span className="text-rose">♡</span>
     </Link>
@@ -63,10 +63,7 @@ export function AnalyzeButton({
   label?: string;
 }) {
   return (
-    <Link
-      to="/analyze"
-      className={`inline-flex items-center justify-center rounded-lg bg-primary px-6 py-3 text-sm lowercase tracking-wide text-primary-foreground shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:bg-rose-deep ${className}`}
-    >
+    <Link to="/analyze" className={`btn-base btn-primary ${className}`}>
       {label}
     </Link>
   );
@@ -76,54 +73,54 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/70 bg-background/85 backdrop-blur-md">
-      <div className="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-5 py-4 sm:px-8 md:flex md:justify-between">
-        <Wordmark className="truncate text-2xl" />
+    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-xl">
+      <div className="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-5 py-5 sm:px-8 md:flex md:justify-between">
+        <Wordmark className="truncate text-[1.6rem]" />
 
-        <nav className="hidden items-center gap-9 md:flex">
+        <nav className="hidden items-center gap-10 md:flex">
           {NAV.map((item) => (
             <Link
               key={item.to}
               to={item.to}
-              className="text-sm tracking-wide text-muted-foreground transition-colors hover:text-foreground"
-              activeProps={{ className: "text-foreground" }}
+              className="relative text-[0.8125rem] lowercase tracking-[0.12em] text-muted-foreground transition-colors duration-300 hover:text-foreground after:absolute after:-bottom-1.5 after:left-0 after:h-px after:w-0 after:bg-rose after:transition-all after:duration-300 hover:after:w-full"
+              activeProps={{ className: "text-foreground after:w-full" }}
             >
               {item.label}
             </Link>
           ))}
           <AuthLink />
-          <AnalyzeButton className="px-5 py-2.5" />
+          <AnalyzeButton className="px-5 py-3" />
         </nav>
 
         <button
           type="button"
           aria-label={open ? "Close menu" : "Open menu"}
           onClick={() => setOpen((v) => !v)}
-          className="shrink-0 rounded-lg border border-border p-2 text-foreground md:hidden"
+          className="shrink-0 rounded-md border border-border p-2.5 text-foreground transition-colors hover:border-rose/60 md:hidden"
         >
           {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
         </button>
       </div>
 
       {open && (
-        <div className="border-t border-border bg-background px-5 pb-6 pt-3 md:hidden">
-          <nav className="flex flex-col gap-1">
+        <div className="fade-in-soft border-t border-border/70 bg-background px-5 pb-7 pt-4 md:hidden">
+          <nav className="flex flex-col">
             {NAV.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
                 onClick={() => setOpen(false)}
-                className="rounded-lg px-2 py-3 text-base text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                className="border-b border-border/50 px-1 py-4 font-serif text-2xl lowercase text-muted-foreground transition-colors hover:text-rose-deep"
                 activeProps={{ className: "text-foreground" }}
               >
                 {item.label}
               </Link>
             ))}
-            <div className="px-2 py-3">
+            <div className="px-1 py-4">
               <AuthLink onNavigate={() => setOpen(false)} />
             </div>
           </nav>
-          <AnalyzeButton className="mt-3 w-full" />
+          <AnalyzeButton className="mt-2 w-full" />
         </div>
       )}
     </header>
@@ -132,17 +129,17 @@ export function SiteHeader() {
 
 export function SiteFooter() {
   return (
-    <footer className="mt-24 border-t border-border bg-secondary/40">
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-12 sm:px-8 md:flex-row md:items-end md:justify-between">
+    <footer className="mt-28 border-t border-border bg-secondary/35">
+      <div className="mx-auto flex max-w-6xl flex-col gap-10 px-5 py-14 sm:px-8 md:flex-row md:items-end md:justify-between">
         <div>
           <Wordmark className="text-xl" />
-          <p className="mt-2 max-w-xs font-serif text-lg italic text-muted-foreground">
+          <p className="mt-3 max-w-xs font-serif text-xl italic leading-snug text-muted-foreground">
             give your clothes another little life.
           </p>
         </div>
-        <div className="flex flex-wrap gap-x-8 gap-y-2 text-sm text-muted-foreground">
+        <div className="flex flex-wrap gap-x-9 gap-y-3 text-[0.8125rem] lowercase tracking-[0.1em] text-muted-foreground">
           {NAV.map((item) => (
-            <Link key={item.to} to={item.to} className="transition-colors hover:text-foreground">
+            <Link key={item.to} to={item.to} className="transition-colors hover:text-rose-deep">
               {item.label}
             </Link>
           ))}
@@ -151,3 +148,4 @@ export function SiteFooter() {
     </footer>
   );
 }
+
