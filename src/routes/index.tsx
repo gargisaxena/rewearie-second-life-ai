@@ -35,7 +35,7 @@ const STEPS = [
   { number: "01", title: "upload your piece", description: "Lay it flat in daylight and upload a photo." },
   { number: "02", title: "tell us its story", description: "Share its condition, category, and why it stopped being worn." },
   { number: "03", title: "discover its next life", description: "Get a clear recommendation and the steps to take." },
-  { number: "04", title: "keep track of your impact", description: "See the water and carbon you save with every piece." },
+  { number: "04", title: "keep track of your impact", description: "See every piece you have reworn, repaired or transformed." },
 ];
 
 function HeroVisual() {
