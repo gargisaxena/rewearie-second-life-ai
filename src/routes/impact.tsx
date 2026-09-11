@@ -110,7 +110,7 @@ function Impact() {
 
       ) : (
         <>
-          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="fade-in-soft mt-14 grid gap-4 border-t border-border/60 pt-12 sm:grid-cols-2 lg:grid-cols-3">
             <Metric label="pieces analyzed" value={String(total)} />
             <Metric label="pieces reworn" value={String(reworn)} />
             <Metric label="pieces repaired" value={String(repaired)} />
@@ -119,14 +119,14 @@ function Impact() {
             <Metric label="pieces recycled" value={String(recycled)} sage />
           </div>
 
-          <section className="mt-20 grid gap-12 lg:grid-cols-[1fr_0.9fr] lg:gap-16">
-            <div className="rounded-2xl border border-border bg-secondary/40 p-8 sm:p-10">
+          <section className="mt-24 grid gap-6 lg:grid-cols-[1fr_0.9fr]">
+            <div className="rounded-xl border border-border bg-secondary/40 p-8 sm:p-12">
               <p className="text-eyebrow">your circularity score</p>
-              <div className="mt-8 flex flex-col items-center gap-8 sm:flex-row sm:gap-12">
+              <div className="mt-10 flex flex-col items-center gap-8 sm:flex-row sm:gap-12">
                 <ScoreRing score={circularityScore} />
                 <div className="text-center sm:text-left">
-                  <p className="font-serif text-5xl">{circularityScore}</p>
-                  <p className="mt-2 text-sm text-muted-foreground">
+                  <p className="font-serif text-6xl leading-none">{circularityScore}</p>
+                  <p className="mt-4 max-w-xs text-lede">
                     out of 100 — based on the choices you have made and how confidently each piece
                     matched its best next life.
                   </p>
@@ -134,57 +134,59 @@ function Impact() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-border bg-sage/20 p-8 sm:p-10">
+            <div className="rounded-xl border border-border bg-sage/15 p-8 sm:p-12">
               <p className="text-eyebrow">why these choices matter</p>
-              <ul className="mt-6 space-y-5 text-sm leading-relaxed text-muted-foreground">
+              <ul className="mt-8 space-y-6 text-[0.9375rem] leading-relaxed text-muted-foreground">
                 <li>
-                  <span className="font-medium text-foreground">Wear it again</span> — the simplest
-                  way to lower demand for new clothes.
+                  <span className="text-foreground">Wear it again</span> — the simplest way to lower
+                  demand for new clothes.
                 </li>
                 <li>
-                  <span className="font-medium text-foreground">Repair it</span> — a small fix can
-                  double the life of a garment you already own.
+                  <span className="text-foreground">Repair it</span> — a small fix can double the
+                  life of a garment you already own.
                 </li>
                 <li>
-                  <span className="font-medium text-foreground">Transform it</span> — upcycling
-                  keeps fibres useful when the original shape no longer works.
+                  <span className="text-foreground">Transform it</span> — upcycling keeps fibres
+                  useful when the original shape no longer works.
                 </li>
                 <li>
-                  <span className="font-medium text-foreground">Pass it on</span> — donating or
-                  reselling extends the life someone else will give it.
+                  <span className="text-foreground">Pass it on</span> — donating or reselling
+                  extends the life someone else will give it.
                 </li>
               </ul>
             </div>
           </section>
 
-          <section className="mt-20">
+          <section className="mt-24 border-t border-border/60 pt-12">
             <p className="text-eyebrow">how your decisions are distributed</p>
-            <div className="mt-8 space-y-5">
+            <div className="mt-10 space-y-6">
               {counts.map((c) => (
-                <div key={c.outcome} className="flex items-center gap-5">
-                  <span className="w-24 shrink-0 text-sm text-muted-foreground">
+                <div key={c.outcome} className="flex items-center gap-4 sm:gap-6">
+                  <span className="w-20 shrink-0 text-[0.6875rem] uppercase tracking-[0.18em] text-muted-foreground sm:w-28">
                     {OUTCOMES[c.outcome].label}
                   </span>
-                  <div className="h-2 flex-1 overflow-hidden rounded-full bg-secondary">
+                  <div className="h-px flex-1 bg-secondary">
                     <div
-                      className={`block h-full rounded-full transition-all duration-700 ${
-                        c.outcome === "recycle" ? "bg-sage" : "bg-petal"
+                      className={`block h-px transition-all duration-1000 ${
+                        c.outcome === "recycle" ? "bg-sage" : "bg-rose"
                       }`}
                       style={{ width: `${(c.count / maxCount) * 100}%` }}
                     />
                   </div>
-                  <span className="w-8 shrink-0 text-right font-serif text-lg">{c.count}</span>
+                  <span className="w-8 shrink-0 text-right font-serif text-xl">{c.count}</span>
                 </div>
               ))}
             </div>
           </section>
 
-          <div className="mt-20 rounded-2xl border border-border bg-blush/60 px-6 py-14 text-center sm:px-16">
-            <h2 className="mx-auto max-w-xl text-3xl italic sm:text-4xl">
-              One more piece, one more little life.
+          <div className="mt-24 rounded-xl border border-border bg-blush/50 px-6 py-20 text-center sm:px-16">
+            <p className="text-eyebrow">keep going</p>
+            <h2 className="mx-auto mt-5 max-w-xl text-3xl italic sm:text-4xl">
+              one more piece, one more little life.
             </h2>
-            <AnalyzeButton className="mt-8 px-7 py-3.5 text-base" />
+            <AnalyzeButton className="mt-9" />
           </div>
+
         </>
       )}
     </div>
