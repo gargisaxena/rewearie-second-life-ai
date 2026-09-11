@@ -39,36 +39,36 @@ function PieceCard({
   const topScore = top?.score ?? piece.confidence;
 
   return (
-    <article className="card-soft group mb-6 break-inside-avoid overflow-hidden">
-      <Link to="/results" search={{ id: piece.id }} className="block">
+    <article className="card-soft group mb-6 break-inside-avoid overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:shadow-lift">
+      <Link to="/results" search={{ id: piece.id }} className="block overflow-hidden">
         {piece.photo ? (
           <img
             src={piece.photo}
             alt={piece.name}
             loading="lazy"
-            className="w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+            className="w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.04]"
           />
         ) : (
           <div className="grid aspect-[4/5] w-full place-items-center bg-blush">
-            <span className="font-serif text-xl italic text-rose-deep">
+            <span className="px-6 text-center font-serif text-xl italic text-rose-deep">
               {piece.category}
             </span>
           </div>
         )}
       </Link>
 
-      <div className="p-5">
+      <div className="p-6">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h2 className="truncate text-xl">{piece.name}</h2>
-            <p className="mt-1 text-xs tracking-wide text-muted-foreground lowercase">
+            <h2 className="truncate text-[1.375rem] leading-snug">{piece.name}</h2>
+            <p className="mt-1.5 text-[0.6875rem] uppercase tracking-[0.18em] text-muted-foreground">
               {piece.condition.toLowerCase()}
             </p>
           </div>
           <button
             aria-label={`Remove ${piece.name}`}
             onClick={() => onRemove(piece.id)}
-            className="shrink-0 rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-rose-deep"
+            className="shrink-0 rounded-md p-2 text-muted-foreground opacity-0 transition-all duration-300 hover:bg-muted hover:text-rose-deep focus-visible:opacity-100 group-hover:opacity-100"
           >
             <Trash2 className="h-4 w-4" />
           </button>
@@ -77,16 +77,16 @@ function PieceCard({
         <Link
           to="/results"
           search={{ id: piece.id }}
-          className="mt-5 flex items-end justify-between border-t border-border/70 pt-4"
+          className="mt-6 flex items-end justify-between border-t border-border/70 pt-5"
         >
           <div className="min-w-0">
             <p className="text-eyebrow">best match</p>
-            <p className="mt-1 truncate font-serif text-2xl italic leading-none text-rose-deep">
+            <p className="mt-1.5 truncate font-serif text-2xl italic leading-none text-rose-deep">
               {OUTCOMES[piece.outcome].label}
             </p>
           </div>
           <p className="shrink-0 text-right">
-            <span className="font-serif text-3xl leading-none">{topScore}</span>
+            <span className="font-serif text-[2rem] leading-none">{topScore}</span>
             <span className="ml-1 text-[0.625rem] uppercase tracking-[0.18em] text-muted-foreground">
               / 100
             </span>
@@ -96,6 +96,20 @@ function PieceCard({
     </article>
   );
 }
+
+function CardSkeleton({ ratio }: { ratio: string }) {
+  return (
+    <div className="card-soft mb-6 break-inside-avoid overflow-hidden">
+      <div className={`skeleton w-full rounded-none ${ratio}`} />
+      <div className="space-y-3 p-6">
+        <div className="skeleton h-5 w-2/3" />
+        <div className="skeleton h-3 w-1/3" />
+        <div className="skeleton mt-6 h-8 w-full" />
+      </div>
+    </div>
+  );
+}
+
 
 function MyPieces() {
   const { user, ready: authReady } = useAuth();
