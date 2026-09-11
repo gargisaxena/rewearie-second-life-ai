@@ -341,12 +341,9 @@ function Results() {
       )}
 
       {/* Actions */}
-      <div className="mt-16 flex flex-wrap items-center justify-center gap-4">
+      <div className="mt-20 flex flex-col items-stretch justify-center gap-3 border-t border-border/60 pt-12 sm:flex-row sm:items-center sm:gap-4">
         {saved ? (
-          <Link
-            to="/pieces"
-            className="rounded-lg bg-primary px-7 py-3.5 text-sm lowercase tracking-wide text-primary-foreground shadow-soft transition-colors hover:bg-rose-deep"
-          >
+          <Link to="/pieces" className="btn-base btn-primary">
             saved — see my pieces ♡
           </Link>
         ) : (
@@ -354,22 +351,24 @@ function Results() {
             type="button"
             disabled={saving}
             onClick={() => void handleSave()}
-            className="rounded-lg bg-primary px-7 py-3.5 text-sm lowercase tracking-wide text-primary-foreground shadow-soft transition-colors hover:bg-rose-deep disabled:opacity-70"
+            className="btn-base btn-primary"
           >
+            {saving && <Loader2 className="h-4 w-4 animate-spin" />}
             {saving ? "saving…" : "save my piece ♡"}
           </button>
         )}
         <button
           type="button"
           onClick={() => navigate({ to: "/analyze" })}
-          className="rounded-lg border border-border bg-card px-7 py-3.5 text-sm lowercase tracking-wide text-foreground transition-colors hover:border-rose/60"
+          className="btn-base btn-quiet"
         >
           analyze another
         </button>
         {saveError && (
-          <p className="w-full text-center text-xs text-rose-deep">{saveError}</p>
+          <p className="w-full text-center text-xs italic text-rose-deep">{saveError}</p>
         )}
       </div>
+
     </div>
   );
 }
