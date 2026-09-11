@@ -65,15 +65,7 @@ function ToggleButton({
   children: React.ReactNode;
 }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`rounded-xl border px-4 py-3 text-sm transition-all duration-300 ${
-        selected
-          ? "border-rose bg-blush text-foreground"
-          : "border-border bg-card text-muted-foreground hover:border-rose/50"
-      }`}
-    >
+    <button type="button" onClick={onClick} className={`chip ${selected ? "chip-on" : ""}`}>
       {children}
     </button>
   );
@@ -82,6 +74,7 @@ function ToggleButton({
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return <h2 className="text-eyebrow">{children}</h2>;
 }
+
 
 function Analyze() {
   const navigate = useNavigate();
