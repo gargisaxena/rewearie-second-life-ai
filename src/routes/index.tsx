@@ -169,12 +169,13 @@ function Home() {
 
       {/* Closing CTA */}
       <section className="mx-auto mt-28 max-w-6xl px-5 pb-10 sm:px-8">
-        <div className="rounded-2xl border border-border bg-secondary/50 px-6 py-16 text-center sm:px-16">
+        <div className="rounded-xl border border-border bg-secondary/45 px-6 py-20 text-center sm:px-16">
           <p className="text-eyebrow">before you let it go</p>
           <h2 className="mx-auto mt-5 max-w-2xl text-4xl italic sm:text-5xl">
             your wardrobe has another story to tell.
           </h2>
-          <AnalyzeButton className="mt-9 px-7 py-3.5 text-base" label="give it another life ♡" />
+          <AnalyzeButton className="mt-9" label="give it another life ♡" />
+
         </div>
       </section>
     </div>
