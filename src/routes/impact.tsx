@@ -204,15 +204,16 @@ function Metric({
 }) {
   return (
     <div
-      className={`rounded-xl border border-border p-7 ${
-        sage ? "bg-sage/25" : "bg-blush/60"
+      className={`rounded-xl border border-border p-8 transition-all duration-500 hover:-translate-y-0.5 hover:shadow-soft ${
+        sage ? "bg-sage/20" : "bg-blush/50"
       }`}
     >
       <p className="text-eyebrow">{label}</p>
-      <p className="mt-3 font-serif text-4xl">{value}</p>
+      <p className="mt-4 font-serif text-5xl leading-none">{value}</p>
     </div>
   );
 }
+
 
 function ScoreRing({ score }: { score: number }) {
   const radius = 54;
