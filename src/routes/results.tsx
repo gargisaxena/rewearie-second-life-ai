@@ -99,25 +99,37 @@ function Results() {
   }
 
   if (!ready) {
-    return <div className="mx-auto max-w-5xl px-5 py-24 sm:px-8" />;
+    return (
+      <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 lg:py-24">
+        <div className="mx-auto h-9 w-72 max-w-full skeleton" />
+        <div className="mt-16 grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
+          <div className="skeleton aspect-[4/5] w-full rounded-xl" />
+          <div className="space-y-5">
+            <div className="skeleton h-3 w-32" />
+            <div className="skeleton h-24 w-full" />
+            <div className="skeleton h-40 w-full" />
+            <div className="skeleton h-24 w-full" />
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (!piece) {
     return (
-      <div className="mx-auto max-w-xl px-5 py-24 text-center sm:px-8">
-        <h1 className="text-4xl">Nothing to show yet.</h1>
-        <p className="mt-4 text-sm text-muted-foreground">
+      <div className="rise-in mx-auto max-w-xl px-5 py-24 text-center sm:px-8 lg:py-32">
+        <p className="text-eyebrow">nothing here yet</p>
+        <h1 className="mt-5 text-4xl sm:text-5xl">no report to read.</h1>
+        <p className="mx-auto mt-5 max-w-sm text-lede">
           Analyze a piece and its personal report will appear here.
         </p>
-        <Link
-          to="/analyze"
-          className="mt-8 inline-block rounded-lg bg-primary px-6 py-3 text-sm lowercase tracking-wide text-primary-foreground transition-colors hover:bg-rose-deep"
-        >
+        <Link to="/analyze" className="btn-base btn-primary mt-9">
           analyze a piece ♡
         </Link>
       </div>
     );
   }
+
 
   const outcome = OUTCOMES[piece.outcome];
   
